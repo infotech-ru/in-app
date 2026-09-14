@@ -1,0 +1,348 @@
+:host {
+    --iam-width: 560px;
+    --iam-height: 580px;
+    --iam-radius: 20px;
+    --iam-accent: #0797f6;
+    --iam-success: #2fd243;
+    --iam-text: #1f2937;
+    --iam-muted: #6f7c8d;
+    --iam-backdrop: rgba(31, 41, 55, 0.58);
+    --iam-backgrond: #ffffff;
+
+    all: initial;
+    color: var(--iam-text);
+    font-family: Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+.iam-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: var(--iam-backdrop);
+}
+
+.iam-dialog {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    width: min(var(--iam-width), 100%);
+    height: min(var(--iam-height), calc(100vh - 32px));
+    overflow: hidden;
+    border-radius: var(--iam-radius);
+    background: var(--iam-backgrond);
+    box-shadow: 0 12px 30px rgba(30, 30, 30, 0.20);
+}
+
+
+
+.iam-header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 68px;
+    padding: 18px 30px;
+    overflow: hidden;
+    border-bottom: 1px solid #dbe4ef;
+    background: rgba(245, 249, 255, 0.92);
+}
+
+h2 {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #dcecff;
+    color: #078cf0;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: 0.5px;
+}
+
+.iam-close {
+    position: relative;
+    z-index: 3;
+    width: 36px;
+    height: 36px;
+    margin-left: auto;
+    padding: 0;
+    border: 1px solid #d8e0eb;
+    border-radius: 50%;
+    background: #fff;
+    color: #667483;
+    box-shadow: 0 2px 5px rgba(41, 55, 75, 0.12);
+    cursor: pointer;
+    font: 300 26px/1 Arial, sans-serif;
+}
+
+.iam-stage {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) 40px;
+    min-height: 0;
+    padding: 36px 30px 14px;
+}
+
+.iam-open-form {
+    padding: 0 14px;
+}
+
+.iam-open-form button {
+    width: 100%;
+}
+
+.iam-viewport {
+    position: relative;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.iam-content {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.5;
+    scrollbar-gutter: stable;
+    will-change: transform;
+}
+
+.iam-content[data-leaving] {
+    pointer-events: none;
+}
+
+.iam-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+.iam-content table {
+    max-width: 100%;
+    border-collapse: collapse;
+}
+
+.iam-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 40px;
+}
+
+.iam-dots,
+.iam-arrows {
+    display: flex;
+    align-items: center;
+}
+
+.iam-dots {
+    gap: 7px;
+}
+
+.iam-arrows {
+    gap: 8px;
+}
+
+.iam-dot {
+    width: 8px;
+    height: 8px;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #e1e7f0;
+}
+
+.iam-dot.is-active {
+    width: 21px;
+    border-radius: 7px;
+    background: var(--iam-accent);
+}
+
+.iam-arrow {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    min-height: 0;
+    padding: 0;
+    border: 1px solid #e1e7f0;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.88);
+    color: #17202d;
+    cursor: pointer;
+    font: 300 25px/1 Arial, sans-serif;
+}
+
+.iam-arrow:disabled {
+    color: #b5bec8;
+    cursor: default;
+    opacity: 0.62;
+}
+
+.iam-lead {
+    position: relative;
+    z-index: 1;
+    padding: 0 30px 20px;
+}
+
+.iam-form-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+label {
+    display: grid;
+    gap: 5px;
+    color: var(--iam-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+input {
+    width: 100%;
+    min-height: 42px;
+    padding: 8px 12px;
+    border: 1px solid #dfe6f0;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #263241;
+    font: 400 14px/1.2 Arial, sans-serif;
+}
+
+input:focus {
+    border-color: var(--iam-accent);
+    outline: 2px solid rgba(7, 151, 246, 0.14);
+}
+
+.iam-submit-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+button.iam-primary {
+    min-width: 172px;
+    min-height: 42px;
+    padding: 8px 14px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--iam-accent);
+    color: #fff;
+    cursor: pointer;
+    font: 700 14px/1.2 Arial, sans-serif;
+}
+
+button.iam-primary:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.iam-consent {
+    max-width: 225px;
+    color: #8997a9;
+    font-size: 11px;
+    line-height: 1.35;
+}
+
+.iam-more-wrap {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.iam-more {
+    position: relative;
+    z-index: 2;
+    color: var(--iam-accent);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.iam-error {
+    position: relative;
+    z-index: 2;
+    grid-row: 1 / -1;
+    align-self: center;
+    margin: 0 30px;
+    padding: 8px 10px;
+    border-radius: 7px;
+    background: #fff0f0;
+    color: #a82020;
+    font-size: 12px;
+}
+
+.iam-lead > .iam-error {
+    grid-row: auto;
+    align-self: auto;
+    margin: 0 0 10px;
+}
+
+.iam-loading,
+.iam-success {
+    position: relative;
+    z-index: 1;
+    grid-row: 1 / -1;
+    align-self: center;
+    padding: 55px 20px;
+    text-align: center;
+}
+
+.iam-success h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+}
+
+@media (max-width: 600px) {
+    .iam-backdrop {
+        align-items: end;
+        padding: 0;
+    }
+
+    .iam-dialog {
+        width: 100%;
+        height: min(620px, 94vh);
+        border-radius: 18px 18px 0 0;
+    }
+
+    .iam-header {
+        min-height: 62px;
+        padding: 14px 20px;
+    }
+
+    .iam-stage {
+        padding: 24px 20px 10px;
+    }
+
+    .iam-lead {
+        padding: 0 20px 18px;
+    }
+
+    .iam-form-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .iam-submit-row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    button.iam-primary {
+        width: 100%;
+        min-width: 0;
+    }
+}

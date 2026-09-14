@@ -1,0 +1,16 @@
+{
+  "name": "@autocrm/in-app-modal",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./styles.css": "./src/styles.css"
+  },
+  "scripts": {
+    "build:styles": "node scripts/build-styles.js",
+    "watch:styles": "node scripts/build-styles.js --watch",
+    "prepack": "npm run build:styles"
+  }
+}
