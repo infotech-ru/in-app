@@ -53,16 +53,18 @@ function safeExternalUrl(value) {
 }
 
 export class InAppModal {
-    constructor({load, submit, project, user = {}, labels = {}, container = document.body}) {
+    constructor({load, submit, project, user = {}, labels = {}, container = document.body, mode = "modal"}) {
         if (typeof load !== "function" || typeof submit !== "function") {
             throw new TypeError("InAppModal requires load and submit functions");
         }
         this.loadAdapter = load;
         this.submitAdapter = submit;
         this.project = project;
+        this.mode = mode;
         this.user = user;
         this.labels = Object.assign({}, DEFAULT_LABELS, labels);
         this.host = document.createElement("div");
+        this.host.dataset.mode = mode;
         this.host.hidden = true;
         this.shadow = this.host.attachShadow({mode: "open"});
         container.append(this.host);
@@ -90,7 +92,9 @@ export class InAppModal {
         };
         this.shadow.addEventListener("pointerdown", this.onPointerDown);
         this.shadow.addEventListener("click", this.onClick);
-        document.addEventListener("keydown", this.onKeyDown);
+        if (this.mode === "modal") {
+            document.addEventListener("keydown", this.onKeyDown);
+        }
     }
 
     async open(code, options = {}) {
@@ -151,7 +155,9 @@ export class InAppModal {
         this.close();
         this.shadow.removeEventListener("pointerdown", this.onPointerDown);
         this.shadow.removeEventListener("click", this.onClick);
-        document.removeEventListener("keydown", this.onKeyDown);
+        if (this.mode === "modal") {
+            document.removeEventListener("keydown", this.onKeyDown);
+        }
         this.host.remove();
     }
 
@@ -181,10 +187,11 @@ export class InAppModal {
                 : "";
             const dots = this.modal.screens.map((item, index) => `<button type="button" class="iam-dot${index === this.screen ? " is-active" : ""}" data-screen="${index}" data-dot aria-label="Экран ${index + 1}"${index === this.screen ? ' aria-current="true"' : ""}></button>`).join("");
             const contact = this.user.phone || this.user.email || "";
+            const leadTag = this.mode === "modal" ? "form" : "div";
 
             header = `<header class="iam-header">
                 <h2 id="in-app-title">${escapeHtml(this.modal.name)}</h2>
-                <button type="button" class="iam-close" data-action="close" aria-label="${escapeHtml(label.close)}">×</button>
+                ${this.mode === "modal" ? `<button type="button" class="iam-close" data-action="close" aria-label="${escapeHtml(label.close)}">×</button>` : ""}
             </header>`;
             body = `<div class="iam-stage">
                     <div class="iam-viewport" data-viewport>
@@ -201,7 +208,7 @@ export class InAppModal {
                 <div class="iam-open-form" data-open>
                         <button type="button" class="iam-primary" data-action="openForm">${escapeHtml(label.openForm)}</button>
                 </div>
-                <form class="iam-lead" style="display:none;" data-lead-form>
+                <${leadTag} class="iam-lead" style="display:none;" data-lead-form>
                     <div class="iam-form-fields">
                         <label>${escapeHtml(label.name)}<input name="name" autocomplete="name" required placeholder="${escapeHtml(label.namePlaceholder)}" value="${escapeHtml(this.user.name)}"></label>
                         <label>${escapeHtml(label.contact)}<input name="contact" autocomplete="tel email" required placeholder="${escapeHtml(label.contactPlaceholder)}" value="${escapeHtml(contact)}"></label>
@@ -210,14 +217,16 @@ export class InAppModal {
                         <button type="button" class="iam-primary" data-action="submit">${escapeHtml(label.submit)}</button>
                         <span class="iam-consent">${escapeHtml(label.consent)}</span>
                     </div>
-                </form>
+                </${leadTag}>
                 ${more}
 `;
         }
 
-        this.shadow.innerHTML = `<style>${STYLES}</style>
-            <div class="iam-backdrop" data-action="backdrop">
-                <section class="iam-dialog" role="dialog" aria-modal="true" aria-label="${escapeHtml((this.modal && this.modal.name) || label.request)}">
+        const isModal = this.mode === "modal";
+        const contentStyles = this.modal && typeof this.modal.styles === "string" ? this.modal.styles : "";
+        this.shadow.innerHTML = `<style>${contentStyles}\n${STYLES}</style>
+            <div class="iam-backdrop${isModal ? "" : " iam-inline"}"${isModal ? ' data-action="backdrop"' : ""}>
+                <section class="iam-dialog" role="${isModal ? "dialog" : "region"}"${isModal ? ' aria-modal="true"' : ""} aria-label="${escapeHtml((this.modal && this.modal.name) || label.request)}">
                     ${header}
                     ${body}
                 </section>
@@ -230,7 +239,7 @@ export class InAppModal {
                 this.submit();
             });
         }
-        queueMicrotask(() => {
+        if (isModal) queueMicrotask(() => {
             const focusTarget = this.shadow.querySelector("button, input, a");
             if (focusTarget) {
                 focusTarget.focus();
@@ -387,7 +396,7 @@ export class InAppModal {
         const actionTarget = event.target.closest("[data-action]");
         const dotTarget = event.target.closest("[data-dot]");
         const action = actionTarget ? actionTarget.dataset.action : undefined;
-        if (action === "backdrop" && event.target.dataset.action === "backdrop") {
+        if (this.mode === "modal" && action === "backdrop" && event.target.dataset.action === "backdrop") {
             const shouldClose = this.pointerStartedOnBackdrop;
             this.pointerStartedOnBackdrop = false;
             if (shouldClose) return this.close();
@@ -414,6 +423,10 @@ export class InAppModal {
 
         if (dotTarget) {
             return this.goToScreen(Number(dotTarget.dataset.screen));
+        }
+
+        if (action === "submit" && this.mode === "inline") {
+            return;
         }
 
         if (action === "submit") {
@@ -465,6 +478,39 @@ export class InAppModal {
             form.prepend(message);
             this.emit("error", {code: this.code, error});
         }
+    }
+}
+
+export class InAppPreview extends InAppModal {
+    constructor({container, modal, user = {}, labels = {}}) {
+        super({
+            container,
+            project: modal && modal.project,
+            user,
+            labels,
+            mode: "inline",
+            load: () => Promise.resolve(modal),
+            submit: () => Promise.resolve(),
+        });
+        this.update(modal);
+    }
+
+    update(modal) {
+        const screens = modal && Array.isArray(modal.screens) && modal.screens.length
+            ? modal.screens
+            : [{position: 1, html: ""}];
+        this.modal = Object.assign({}, modal, {
+            name: modal && modal.name ? modal.name : "Предпросмотр",
+            screens,
+        });
+        this.code = this.modal.code || "preview";
+        this.activeProject = this.modal.project || this.project;
+        this.screen = Math.min(this.screen, screens.length - 1);
+        this.view = "content";
+        this.error = "";
+        this.resetDialogHeight();
+        this.host.hidden = false;
+        this.render();
     }
 }
 

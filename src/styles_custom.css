@@ -1,0 +1,499 @@
+/* ============================================
+   БАЗОВЫЕ КЛАССЫ РАЗМЕТКИ
+   ============================================ */
+
+/* Контейнеры */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.container-fluid {
+    width: 100%;
+    padding: 0 16px;
+}
+
+/* Flex-разметка */
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.flex-around {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.flex-start {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.flex-end {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+/* Grid-разметка */
+.grid {
+    display: grid;
+    gap: 16px;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+/* Отступы */
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 4px; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 16px; }
+.mt-4 { margin-top: 24px; }
+.mt-5 { margin-top: 32px; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 4px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 16px; }
+.mb-4 { margin-bottom: 24px; }
+.mb-5 { margin-bottom: 32px; }
+
+.p-0 { padding: 0; }
+.p-1 { padding: 4px; }
+.p-2 { padding: 8px; }
+.p-3 { padding: 16px; }
+.p-4 { padding: 24px; }
+.p-5 { padding: 32px; }
+
+/* Выравнивание текста */
+.text-left   { text-align: left; }
+.text-center { text-align: center; }
+.text-right  { text-align: right; }
+
+/* Ширина */
+.w-100 { width: 100%; }
+.w-75  { width: 75%; }
+.w-50  { width: 50%; }
+.w-25  { width: 25%; }
+
+
+/* ============================================
+   ЗАГОЛОВКИ
+   ============================================ */
+
+.h1, h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 0.5em 0;
+    color: #1a1a1a;
+}
+
+.h2, h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0 0 0.5em 0;
+    color: #1a1a1a;
+}
+
+.h3, h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 0.5em 0;
+    color: #1a1a1a;
+}
+
+.h4, h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 0.5em 0;
+    color: #1a1a1a;
+}
+
+.h5, h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0 0 0.5em 0;
+    color: #1a1a1a;
+}
+
+.h6, h6 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0 0 0.5em 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #1a1a1a;
+}
+
+/* Модификаторы заголовков */
+.h-muted    { color: #6b7280; }
+.h-primary  { color: #2563eb; }
+.h-success  { color: #16a34a; }
+.h-danger   { color: #dc2626; }
+.h-warning  { color: #d97706; }
+
+.h-thin     { font-weight: 300; }
+.h-normal   { font-weight: 400; }
+.h-bold     { font-weight: 700; }
+
+.h-underline {
+    border-bottom: 2px solid currentColor;
+    padding-bottom: 0.25em;
+}
+
+.h-with-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.h-with-line::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+}
+
+
+/* ============================================
+   СПИСКИ
+   ============================================ */
+
+/* Базовый список */
+.list {
+    margin: 0 0 1em 0;
+    padding: 0;
+    list-style: none;
+}
+
+.list li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+/* Маркированный список */
+.list-disc {
+    list-style: disc;
+    padding-left: 1.5em;
+}
+
+.list-circle {
+    list-style: circle;
+    padding-left: 1.5em;
+}
+
+.list-square {
+    list-style: square;
+    padding-left: 1.5em;
+}
+
+/* Нумерованный список */
+.list-decimal {
+    list-style: decimal;
+    padding-left: 1.5em;
+}
+
+.list-lower-alpha {
+    list-style: lower-alpha;
+    padding-left: 1.5em;
+}
+
+.list-upper-roman {
+    list-style: upper-roman;
+    padding-left: 1.5em;
+}
+
+/* Список с кастомным маркером */
+.list-check li {
+    position: relative;
+    padding-left: 28px;
+}
+
+.list-check li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #16a34a;
+    font-weight: 700;
+}
+
+.list-arrow li {
+    position: relative;
+    padding-left: 24px;
+}
+
+.list-arrow li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #2563eb;
+}
+
+.list-dot li {
+    position: relative;
+    padding-left: 20px;
+}
+
+.list-dot li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2563eb;
+}
+
+/* Горизонтальный список */
+.list-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Список определений */
+.list-definition dt {
+    font-weight: 600;
+    margin-top: 12px;
+}
+
+.list-definition dd {
+    margin: 0 0 8px 0;
+    padding-left: 16px;
+    color: #6b7280;
+}
+
+/* Список с разделителями */
+.list-divided li {
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.list-divided li:last-child {
+    border-bottom: none;
+}
+
+/* Вложенные списки */
+.list .list {
+    margin-top: 8px;
+    margin-bottom: 0;
+    padding-left: 20px;
+}
+
+
+/* ============================================
+   ЛЕЙБЛЫ
+   ============================================ */
+
+/* Базовый лейбл */
+.label {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+    border-radius: 4px;
+    color: #374151;
+    background: #f3f4f6;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+/* Цветные варианты */
+.label-primary {
+    color: #ffffff;
+    background: #2563eb;
+}
+
+.label-success {
+    color: #ffffff;
+    background: #16a34a;
+}
+
+.label-danger {
+    color: #ffffff;
+    background: #dc2626;
+}
+
+.label-warning {
+    color: #ffffff;
+    background: #d97706;
+}
+
+.label-info {
+    color: #ffffff;
+    background: #0891b2;
+}
+
+.label-dark {
+    color: #ffffff;
+    background: #1f2937;
+}
+
+.label-light {
+    color: #374151;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+}
+
+/* Мягкие (outline) варианты */
+.label-outline-primary {
+    color: #2563eb;
+    background: transparent;
+    border: 1px solid #2563eb;
+}
+
+.label-outline-success {
+    color: #16a34a;
+    background: transparent;
+    border: 1px solid #16a34a;
+}
+
+.label-outline-danger {
+    color: #dc2626;
+    background: transparent;
+    border: 1px solid #dc2626;
+}
+
+/* Формы */
+.label-pill {
+    border-radius: 999px;
+    padding: 4px 12px;
+}
+
+.label-square {
+    border-radius: 0;
+}
+
+.label-round {
+    border-radius: 4px;
+}
+
+/* Размеры */
+.label-sm {
+    padding: 2px 8px;
+    font-size: 0.6875rem;
+}
+
+.label-lg {
+    padding: 6px 14px;
+    font-size: 0.875rem;
+}
+
+/* Лейбл с точкой */
+.label-dot::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+/* Лейбл для формы */
+.label-form {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.label-form .required {
+    color: #dc2626;
+    margin-left: 2px;
+}
+
+.label-form .hint {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #6b7280;
+}
+
+/* Лейбл с иконкой */
+.label-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+
+/* ============================================
+   АДАПТИВНОСТЬ
+   ============================================ */
+
+@media (max-width: 768px) {
+    .h1, h1 { font-size: 2rem; }
+    .h2, h2 { font-size: 1.625rem; }
+    .h3, h3 { font-size: 1.25rem; }
+
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+
+    .list-inline {
+        flex-direction: column;
+        gap: 8px;
+    }
+}

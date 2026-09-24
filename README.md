@@ -2,11 +2,14 @@
 
 Мультипроектный модальный компонент без зависимостей. Компонент использует Shadow DOM.
 
-Стили каркаса редактируются в `src/styles.css`. После изменения выполните `npm run build:styles`;
+Стили каркаса редактируются в `src/styles.css`. После изменения выполните `npm run build:styles`.
+Стили содержимого экранов пакет не хранит: адаптер `load` должен вернуть их в поле `styles`
+вместе с остальными данными модалки.
 
 ```js
 import {
     InAppModal,
+    InAppPreview,
     bindInAppModalLinks,
     openInAppModalFromLocation,
 } from "@autocrm/in-app-modal";
@@ -39,6 +42,23 @@ const modal = new InAppModal({
 
 bindInAppModalLinks(modal, {project});
 openInAppModalFromLocation(modal, {project});
+```
+
+Минимальный ответ `load`:
+
+```js
+{
+    name: "Телефония",
+    styles: ".h3 { font-size: 24px; }",
+    screens: [{position: 1, html: '<h3 class="h3">Заголовок</h3>'}],
+}
+```
+
+Inline-компонент:
+
+```js
+const preview = new InAppPreview({container: document.querySelector("#preview"), modal});
+preview.update(updatedModal);
 ```
 
 
