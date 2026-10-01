@@ -220,8 +220,21 @@
 
 .iam-form-fields {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.iam-form-fields label.name {
+    grid-column: span 2 / span 2;
+}
+
+.iam-form-fields label.email {
+    grid-row-start: 2;
+}
+
+.iam-form-fields label.phone {
+    grid-row-start: 2;
 }
 
 label {

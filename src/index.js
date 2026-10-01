@@ -9,8 +9,11 @@ const DEFAULT_LABELS = {
     openForm: "Запросить предложение",
     submitting: "Отправляем…",
     name: "Имя",
-    contact: "Телефон или e-mail",
-    contactPlaceholder: "+7 900 000-00-00",
+    email: "E-mail",
+    phone: "Телефон",
+    emailPlaceholder: "example@example.ru",
+    phonePlaceholder: "+7 900 000-00-00",
+    contactRequired: "Укажите телефон или e-mail.",
     namePlaceholder: "Как к вам обращаться",
     consent: "Нажимая кнопку, вы соглашаетесь на обработку данных для связи.",
     more: "Подробнее о возможностях ↗",
@@ -186,7 +189,8 @@ export class InAppModal {
                 ? `<div class="iam-more-wrap"><a class="iam-more" href="${escapeHtml(descriptionUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label.more)}</a></div>`
                 : "";
             const dots = this.modal.screens.map((item, index) => `<button type="button" class="iam-dot${index === this.screen ? " is-active" : ""}" data-screen="${index}" data-dot aria-label="Экран ${index + 1}"${index === this.screen ? ' aria-current="true"' : ""}></button>`).join("");
-            const contact = this.user.phone || this.user.email || "";
+            const email = this.user.email || "";
+            const phone = this.user.phone || "";
             const leadTag = this.mode === "modal" ? "form" : "div";
 
             header = `<header class="iam-header">
@@ -210,8 +214,9 @@ export class InAppModal {
                 </div>
                 <${leadTag} class="iam-lead" style="display:none;" data-lead-form>
                     <div class="iam-form-fields">
-                        <label>${escapeHtml(label.name)}<input name="name" autocomplete="name" required placeholder="${escapeHtml(label.namePlaceholder)}" value="${escapeHtml(this.user.name)}"></label>
-                        <label>${escapeHtml(label.contact)}<input name="contact" autocomplete="tel email" required placeholder="${escapeHtml(label.contactPlaceholder)}" value="${escapeHtml(contact)}"></label>
+                        <label class="name">${escapeHtml(label.name)}<input name="name" autocomplete="name" required placeholder="${escapeHtml(label.namePlaceholder)}" value="${escapeHtml(this.user.name)}"></label>
+                        <label class="email">${escapeHtml(label.email)}<input name="email" type="email" autocomplete="email" placeholder="${escapeHtml(label.emailPlaceholder)}" value="${escapeHtml(email)}"></label>
+                        <label class="phone">${escapeHtml(label.phone)}<input name="phone" type="tel" autocomplete="tel" placeholder="${escapeHtml(label.phonePlaceholder)}" value="${escapeHtml(phone)}"></label>
                     </div>
                     <div class="iam-submit-row">
                         <button type="button" class="iam-primary" data-action="submit">${escapeHtml(label.submit)}</button>
@@ -237,6 +242,11 @@ export class InAppModal {
             leadForm.addEventListener("submit", event => {
                 event.preventDefault();
                 this.submit();
+            });
+            leadForm.addEventListener("input", event => {
+                if (event.target.matches('[name="email"], [name="phone"]')) {
+                    this.updateContactValidity(leadForm);
+                }
             });
         }
         if (isModal) queueMicrotask(() => {
@@ -436,6 +446,7 @@ export class InAppModal {
 
     async submit() {
         const form = this.shadow.querySelector("[data-lead-form]");
+        this.updateContactValidity(form);
         if (!form.reportValidity()){
             return;
         }
@@ -447,16 +458,18 @@ export class InAppModal {
             currentError.remove();
         }
         const values = Object.fromEntries(new FormData(form));
-        const contact = String(values.contact || "").trim();
+        const email = String(values.email || "").trim();
+        const phone = String(values.phone || "").trim();
         const lead = {
             name: values.name,
             phone: this.user.phone || "",
             email: this.user.email || "",
         };
-        if (contact.includes("@")) {
-            lead.email = contact;
-        } else {
-            lead.phone = contact;
+        if (email) {
+            lead.email = email;
+        }
+        if (phone) {
+            lead.phone = phone;
         }
         try {
             await this.submitAdapter({
@@ -478,6 +491,18 @@ export class InAppModal {
             form.prepend(message);
             this.emit("error", {code: this.code, error});
         }
+    }
+
+    updateContactValidity(form) {
+        const email = form.querySelector('[name="email"]');
+        const phone = form.querySelector('[name="phone"]');
+        if (!email || !phone) {
+            return;
+        }
+
+        const hasContact = email.value.trim() !== "" || phone.value.trim() !== "";
+        email.setCustomValidity(hasContact ? "" : this.labels.contactRequired);
+        phone.setCustomValidity("");
     }
 }
 
