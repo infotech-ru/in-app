@@ -56,12 +56,16 @@ function safeExternalUrl(value) {
 }
 
 export class InAppModal {
-    constructor({load, submit, project, user = {}, labels = {}, container = document.body, mode = "modal"}) {
+    constructor({load, submit, track = null, project, user = {}, labels = {}, container = document.body, mode = "modal"}) {
         if (typeof load !== "function" || typeof submit !== "function") {
             throw new TypeError("InAppModal requires load and submit functions");
         }
+        if (track !== null && typeof track !== "function") {
+            throw new TypeError("InAppModal track must be a function");
+        }
         this.loadAdapter = load;
         this.submitAdapter = submit;
+        this.trackAdapter = track;
         this.project = project;
         this.mode = mode;
         this.user = user;
@@ -113,6 +117,7 @@ export class InAppModal {
         this.host.hidden = false;
         this.render();
         this.emit("open", {code});
+        this.recordEvent("open");
 
         if (this.abortController) {
             this.abortController.abort();
@@ -141,6 +146,7 @@ export class InAppModal {
     }
 
     close() {
+        const wasOpen = !this.host.hidden;
         if (this.abortController) {
             this.abortController.abort();
         }
@@ -151,7 +157,10 @@ export class InAppModal {
         if (this.returnFocus && typeof this.returnFocus.focus === "function") {
             this.returnFocus.focus();
         }
-        this.emit("close", {code: this.code});
+        if (wasOpen) {
+            this.emit("close", {code: this.code});
+            this.recordEvent("close");
+        }
     }
 
     destroy() {
@@ -166,6 +175,27 @@ export class InAppModal {
 
     emit(name, detail) {
         this.host.dispatchEvent(new CustomEvent(`in-app-modal:${name}`, {detail, bubbles: true, composed: true}));
+    }
+
+    recordEvent(type, data = {}) {
+        if (!this.trackAdapter || this.mode !== "modal") {
+            return;
+        }
+
+        try {
+            Promise.resolve(this.trackAdapter({
+                code: this.code,
+                project: this.activeProject,
+                type,
+                occurredAt: new Date().toISOString(),
+                user: this.user,
+                data,
+            })).catch(error => {
+                this.emit("analytics-error", {code: this.code, type, error});
+            });
+        } catch (error) {
+            this.emit("analytics-error", {code: this.code, type, error});
+        }
     }
 
     render() {
@@ -334,8 +364,13 @@ export class InAppModal {
         if (target === this.screen) {
             return;
         }
-        const direction = target > this.screen ? "forward" : "back";
+        const previous = this.screen;
+        const direction = target > previous ? "forward" : "back";
         this.screen = target;
+        this.recordEvent("screen_change", {
+            from: previous + 1,
+            to: target + 1,
+        });
         if (!silent) {
             this.emit("step", {code: this.code, screen: this.screen, view: "content"});
         }
@@ -417,6 +452,7 @@ export class InAppModal {
             this.shadow.querySelector("[data-open]").style = 'display: none;';
             this.shadow.querySelector("[data-lead-form]").style = '';
             this.setDialogHeight('700px');
+            this.recordEvent("form_open");
         }
 
         if (action === "close") {
@@ -445,6 +481,7 @@ export class InAppModal {
     }
 
     async submit() {
+        this.recordEvent("submit_click");
         const form = this.shadow.querySelector("[data-lead-form]");
         this.updateContactValidity(form);
         if (!form.reportValidity()){
