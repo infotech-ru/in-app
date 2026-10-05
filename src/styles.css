@@ -423,7 +423,6 @@ input:focus {
     text-decoration: underline;
 }
 
-
 .iam-error {
     position: relative;
     z-index: 2;
@@ -443,8 +442,7 @@ input:focus {
     margin: 0 0 10px;
 }
 
-.iam-loading,
-.iam-success {
+.iam-loading {
     position: relative;
     z-index: 1;
     grid-row: 1 / -1;
@@ -453,9 +451,43 @@ input:focus {
     text-align: center;
 }
 
-.iam-success h3 {
-    margin: 0 0 8px;
-    font-size: 20px;
+.iam-form-success {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    margin-top: 14px;
+}
+
+.iam-form-success-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.iam-form-success-details b {
+    font-size: 13.5px;
+}
+
+.iam-form-success-details span {
+    font-size: 12.5px;
+    color: var(--iam-muted);
+}
+
+.ok-badge {
+    width: 34px;
+    height: 34px;
+    background: rgba(72,216,72,.16);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    color: var(--iam-success);
+}
+
+.ok-badge svg {
+    width: 19px;
+    height: 19px;
 }
 
 @media (max-width: 600px) {

@@ -17,8 +17,8 @@ const DEFAULT_LABELS = {
     namePlaceholder: "Как к вам обращаться",
     consent: "Нажимая кнопку, вы соглашаетесь на обработку данных для связи.",
     more: "Подробнее о возможностях",
-    successTitle: "Заявка отправлена",
-    successText: "Мы свяжемся с вами в ближайшее время.",
+    successTitle: "Запрос отправлен",
+    successText: "Специалист INFOTECH свяжется с вами по подключению.",
     error: "Не удалось выполнить запрос. Попробуйте ещё раз.",
 };
 
@@ -212,8 +212,6 @@ export class InAppModal {
             body = '<div class="iam-loading" aria-live="polite">Загрузка…</div>';
         } else if (this.view === "error") {
             body = `<div class="iam-error" role="alert">${escapeHtml(this.error || label.error)}</div>`;
-        } else if (this.view === "success") {
-            body = `<div class="iam-success"><h3>${escapeHtml(label.successTitle)}</h3><p>${escapeHtml(label.successText)}</p><button type="button" class="iam-primary" data-action="close">${escapeHtml(label.close)}</button></div>`;
         } else {
             const screen = this.modal.screens[this.screen];
             const descriptionUrl = safeExternalUrl(this.modal.descriptionUrl);
@@ -283,6 +281,15 @@ export class InAppModal {
                              <span class="iam-consent">${escapeHtml(label.consent)}</span>
                          </div>
                     </${leadTag}>
+                    <div class="iam-form-success" style="display: none;" data-success-fallback>
+                        <div class="ok-badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                        </div>
+                        <div class="iam-form-success-details">
+                            <b>${escapeHtml(label.successTitle)}</b>
+                            <span>${escapeHtml(label.successText)}</span>
+                        </div>
+                    </div>
                     ${more}
                 </div>
             `
@@ -516,6 +523,8 @@ export class InAppModal {
     async submit() {
         this.recordEvent("submit_click");
         const form = this.shadow.querySelector("[data-lead-form]");
+        const formOpener = this.shadow.querySelector("[data-open]")
+        const successFallback = this.shadow.querySelector("[data-success-fallback]");
         this.updateContactValidity(form);
         if (!form.reportValidity()){
             return;
@@ -548,8 +557,11 @@ export class InAppModal {
                 lead,
                 idempotencyKey: this.submissionKey || (this.submissionKey = idempotencyKey()),
             });
-            this.view = "success";
-            this.render();
+            form.style.display = 'none';
+            formOpener.style.display = 'none';
+            const successFallback = this.shadow.querySelector("[data-success-fallback]");
+            successFallback.style.display = 'flex';
+            this.resetDialogHeight();
             this.emit("submitted", {code: this.code});
         } catch (error) {
             button.disabled = false;
