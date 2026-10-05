@@ -203,6 +203,7 @@ export class InAppModal {
         let body;
         let header = "";
         let top = '<div class="iam-top"></div>'
+        let footer = "";
 
         this.cancelScreenAnimation();
         this.cancelDialogResize();
@@ -237,34 +238,46 @@ export class InAppModal {
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
                     </button>` : ""}
             </header>`;
-            body = `<div class="iam-stage">
-                    <div class="iam-viewport" data-viewport>
-                        <div class="iam-content" data-screen-panel>${screen.html}</div>
+            body = `
+                <div class="iam-stage">
+                    <div class="iam-stage-content">
+                        <div class="iam-viewport" data-viewport>
+                            <div class="iam-content" data-screen-panel>${screen.html}</div>
+                        </div>
                     </div>
                     <div class="iam-navigation">
                         <div class="iam-dots">${dots}</div>
                         <div class="iam-arrows">
-                            <button type="button" class="iam-arrow" data-action="back" aria-label="${escapeHtml(label.back)}"${this.screen === 0 ? " disabled" : ""}>‹</button>
-                            <button type="button" class="iam-arrow" data-action="next" aria-label="${escapeHtml(label.next)}"${this.screen === this.modal.screens.length - 1 ? " disabled" : ""}>›</button>
+                            <button type="button" class="iam-arrow" data-action="back" aria-label="${escapeHtml(label.back)}"${this.screen === 0 ? " disabled" : ""}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>
+                            </button>
+                            <button type="button" class="iam-arrow" data-action="next" aria-label="${escapeHtml(label.next)}"${this.screen === this.modal.screens.length - 1 ? " disabled" : ""}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div class="iam-open-form" data-open>
+               
+            `;
+            footer = `
+                <div class="iam-footer">
+                    <div class="iam-open-form" data-open>
                         <button type="button" class="iam-primary" data-action="openForm">${escapeHtml(label.openForm)}</button>
+                    </div>
+                    <${leadTag} class="iam-lead" style="display:none;" data-lead-form>
+                         <div class="iam-form-fields">
+                             <label class="name">${escapeHtml(label.name)}<input name="name" autocomplete="name" required placeholder="${escapeHtml(label.namePlaceholder)}" value="${escapeHtml(this.user.name)}"></label>
+                             <label class="email">${escapeHtml(label.email)}<input name="email" type="email" autocomplete="email" placeholder="${escapeHtml(label.emailPlaceholder)}" value="${escapeHtml(email)}"></label>
+                             <label class="phone">${escapeHtml(label.phone)}<input name="phone" type="tel" autocomplete="tel" placeholder="${escapeHtml(label.phonePlaceholder)}" value="${escapeHtml(phone)}"></label>
+                         </div>
+                         <div class="iam-submit-row">
+                             <button type="button" class="iam-primary" data-action="submit">${escapeHtml(label.submit)}</button>
+                             <span class="iam-consent">${escapeHtml(label.consent)}</span>
+                         </div>
+                    </${leadTag}>
+                    ${more}
                 </div>
-                <${leadTag} class="iam-lead" style="display:none;" data-lead-form>
-                    <div class="iam-form-fields">
-                        <label class="name">${escapeHtml(label.name)}<input name="name" autocomplete="name" required placeholder="${escapeHtml(label.namePlaceholder)}" value="${escapeHtml(this.user.name)}"></label>
-                        <label class="email">${escapeHtml(label.email)}<input name="email" type="email" autocomplete="email" placeholder="${escapeHtml(label.emailPlaceholder)}" value="${escapeHtml(email)}"></label>
-                        <label class="phone">${escapeHtml(label.phone)}<input name="phone" type="tel" autocomplete="tel" placeholder="${escapeHtml(label.phonePlaceholder)}" value="${escapeHtml(phone)}"></label>
-                    </div>
-                    <div class="iam-submit-row">
-                        <button type="button" class="iam-primary" data-action="submit">${escapeHtml(label.submit)}</button>
-                        <span class="iam-consent">${escapeHtml(label.consent)}</span>
-                    </div>
-                </${leadTag}>
-                ${more}
-`;
+            `
         }
 
         const isModal = this.mode === "modal";
@@ -275,6 +288,7 @@ export class InAppModal {
                     ${top}
                     ${header}
                     ${body}
+                    ${footer}
                 </section>
             </div>`;
 
