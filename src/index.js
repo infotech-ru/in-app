@@ -16,7 +16,7 @@ const DEFAULT_LABELS = {
     contactRequired: "Укажите телефон или e-mail.",
     namePlaceholder: "Как к вам обращаться",
     consent: "Нажимая кнопку, вы соглашаетесь на обработку данных для связи.",
-    more: "Подробнее о возможностях ↗",
+    more: "Подробнее о возможностях",
     successTitle: "Заявка отправлена",
     successText: "Мы свяжемся с вами в ближайшее время.",
     error: "Не удалось выполнить запрос. Попробуйте ещё раз.",
@@ -218,7 +218,12 @@ export class InAppModal {
             const screen = this.modal.screens[this.screen];
             const descriptionUrl = safeExternalUrl(this.modal.descriptionUrl);
             const more = descriptionUrl
-                ? `<div class="iam-more-wrap"><a class="iam-more" href="${escapeHtml(descriptionUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label.more)}</a></div>`
+                ? `<div class="iam-more-wrap">
+                        <a class="iam-more" href="${escapeHtml(descriptionUrl)}" target="_blank" rel="noopener noreferrer">
+                            <span class="iam-more-text">${escapeHtml(label.more)}</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"></path></svg>
+                        </a>
+                    </div>`
                 : "";
             const dots = this.modal.screens.map((item, index) => `<button type="button" class="iam-dot${index === this.screen ? " is-active" : ""}" data-screen="${index}" data-dot aria-label="Экран ${index + 1}"${index === this.screen ? ' aria-current="true"' : ""}></button>`).join("");
             const email = this.user.email || "";
@@ -262,7 +267,10 @@ export class InAppModal {
             footer = `
                 <div class="iam-footer">
                     <div class="iam-open-form" data-open>
-                        <button type="button" class="iam-primary" data-action="openForm">${escapeHtml(label.openForm)}</button>
+                        <button type="button" class="iam-primary" data-action="openForm">
+                            ${escapeHtml(label.openForm)}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+                        </button>
                     </div>
                     <${leadTag} class="iam-lead" style="display:none;" data-lead-form>
                          <div class="iam-form-fields">

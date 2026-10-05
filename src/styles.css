@@ -5,9 +5,10 @@
     --iam-min-width: 540px;
     --iam-radius: 20px;
     --iam-accent: #0090f8;
+    --iam-accent-deep: #0079d6;
     --iam-success: #48d848;
     --iam-text: #1f2937;
-    --iam-muted: #6f7c8d;
+    --iam-muted: #6b7684;
     --iam-backdrop: rgba(31, 41, 55, 0.58);
     --iam-backgrond: #ffffff;
     --iam-line: #e3e8ef;
@@ -28,6 +29,61 @@
 *::before,
 *::after {
     box-sizing: border-box;
+}
+
+button.iam-primary {
+    min-width: 164px;
+    min-height: 38px;
+    padding: 11px 17px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--iam-accent);
+    color: #fff;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-family: Arial, sans-serif;
+    font-weight: 800;
+    transition: all .1s linear;
+}
+
+button.iam-primary:hover {
+    background: var(--iam-accent-deep);
+}
+
+button.iam-primary:active {
+    transform: translateY(1px);
+}
+
+button.iam-primary:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+label {
+    display: grid;
+    gap: 5px;
+    color: var(--iam-muted);
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 11px;
+    border: 1px solid var(--iam-line);
+    border-radius: 9px;
+    background: #fff;
+    color: #263241;
+    font-size: 13.5px;
+    outline: none;
+    font-family: Arial, sans-serif;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+input:focus {
+    border-color: var(--iam-accent);
+    box-shadow: 0 0 0 3px rgba(0, 144, 248, .14);
 }
 
 .iam-top {
@@ -69,8 +125,21 @@
     height: min(var(--iam-height), calc(100vh - 32px));
     overflow: hidden;
     border-radius: var(--iam-radius);
-    background: var(--iam-backgrond);
+    background: linear-gradient(168deg,#f2f7ff 0%, #ffffff 42%, #f2fcf3 100%);
     box-shadow: 0 12px 30px rgba(30, 30, 30, 0.20);
+}
+
+.iam-dialog:before {
+    content: '';
+    position: absolute;
+    right: -24px;
+    bottom: -24px;
+    width: 230px;
+    height: 170px;
+    z-index: 0;
+    pointer-events: none;
+    opacity: .05;
+    background: repeating-linear-gradient(-22deg, transparent 0 12px, var(--iam-accent) 12px 20px, transparent 20px 34px, var(--iam-success) 34px 42px);
 }
 
 .iam-header {
@@ -173,6 +242,16 @@
 
 .iam-open-form button {
     width: 100%;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    font-size: 15px;
+}
+
+.iam-open-form button svg {
+    width: 17px;
+    height: 17px;
 }
 
 .iam-viewport {
@@ -288,7 +367,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 15px;
+    gap: 9px;
 }
 
 .iam-form-fields label.name {
@@ -303,30 +382,6 @@
     grid-row-start: 2;
 }
 
-label {
-    display: grid;
-    gap: 5px;
-    color: var(--iam-muted);
-    font-size: 12px;
-    font-weight: 700;
-}
-
-input {
-    width: 100%;
-    min-height: 42px;
-    padding: 8px 12px;
-    border: 1px solid #dfe6f0;
-    border-radius: 9px;
-    background: rgba(255, 255, 255, 0.9);
-    color: #263241;
-    font: 400 14px/1.2 Arial, sans-serif;
-}
-
-input:focus {
-    border-color: var(--iam-accent);
-    outline: 2px solid rgba(7, 151, 246, 0.14);
-}
-
 .iam-submit-row {
     display: flex;
     align-items: center;
@@ -334,33 +389,15 @@ input:focus {
     margin-top: 10px;
 }
 
-button.iam-primary {
-    min-width: 172px;
-    min-height: 42px;
-    padding: 8px 14px;
-    border: 0;
-    border-radius: 9px;
-    background: var(--iam-accent);
-    color: #fff;
-    cursor: pointer;
-    font: 700 14px/1.2 Arial, sans-serif;
-}
-
-button.iam-primary:disabled {
-    cursor: wait;
-    opacity: 0.65;
-}
-
 .iam-consent {
-    max-width: 225px;
-    color: #8997a9;
+    color: #858f9d;
     font-size: 11px;
     line-height: 1.35;
+    max-width: 240px;
 }
 
 .iam-more-wrap {
     margin-top: 12px;
-    margin-bottom: 12px;
     text-align: center;
 }
 
@@ -371,7 +408,21 @@ button.iam-primary:disabled {
     font-size: 13px;
     font-weight: 700;
     text-decoration: none;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    gap: 6px;
 }
+
+.iam-more svg {
+    width: 14px;
+    height: 14px;
+}
+
+.iam-more:hover .iam-more-text {
+    text-decoration: underline;
+}
+
 
 .iam-error {
     position: relative;
