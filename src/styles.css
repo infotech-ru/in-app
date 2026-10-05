@@ -1,13 +1,16 @@
 :host {
-    --iam-width: 560px;
-    --iam-height: 580px;
+    --iam-width: 600px;
+    --iam-height: 620px;
     --iam-radius: 20px;
-    --iam-accent: #0797f6;
-    --iam-success: #2fd243;
+    --iam-accent: #0090f8;
+    --iam-success: #48d848;
     --iam-text: #1f2937;
     --iam-muted: #6f7c8d;
     --iam-backdrop: rgba(31, 41, 55, 0.58);
     --iam-backgrond: #ffffff;
+    --iam-line: #e3e8ef;
+    --iam-bg: #f4f6f9;
+    --iam-ink: #1e2733;
 
     all: initial;
     color: var(--iam-text);
@@ -23,6 +26,11 @@
 *::before,
 *::after {
     box-sizing: border-box;
+}
+
+.iam-top {
+    height: 4px;
+    background: linear-gradient(90deg, var(--iam-success) 0%, var(--iam-success) 45%, var(--iam-accent) 55%, var(--iam-accent) 100%);
 }
 
 .iam-backdrop {
@@ -53,8 +61,8 @@
 
 .iam-dialog {
     position: relative;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    display: flex;
+    flex-direction: column;
     width: min(var(--iam-width), 100%);
     height: min(var(--iam-height), calc(100vh - 32px));
     overflow: hidden;
@@ -63,53 +71,92 @@
     box-shadow: 0 12px 30px rgba(30, 30, 30, 0.20);
 }
 
-
-
 .iam-header {
     position: relative;
     z-index: 2;
     display: flex;
     align-items: center;
     gap: 16px;
-    min-height: 68px;
-    padding: 18px 30px;
+    padding: 16px 18px 14px;
     overflow: hidden;
-    border-bottom: 1px solid #dbe4ef;
-    background: rgba(245, 249, 255, 0.92);
+    border-bottom: 1px solid var(--iam-line);
+    background: linear-gradient(135deg, rgba(237, 246, 255, .7) 0%, rgba(255, 255, 255, 0) 60%);
 }
 
 .iam-header h2 {
     position: relative;
     z-index: 1;
     margin: 0;
-    padding: 7px 12px;
+    padding: 4px 9px;
     border-radius: 999px;
-    background: #dcecff;
-    color: #078cf0;
-    font-size: 12px;
-    line-height: 1;
+    background: rgba(0,144,248,.1);
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--iam-accent);
+    line-height: 12px;
     letter-spacing: 0.5px;
+}
+
+.iam-header-stripes {
+    position: absolute;
+    top: -10px;
+    right: 44px;
+    display: flex;
+    gap: 6px;
+    opacity: .18;
+    pointer-events: none;
+}
+
+.iam-header-stripes i  {
+    width: 13px;
+    height: 58px;
+    border-radius: 3px;
+    transform: skewX(-22deg);
+    display: block;
+}
+
+.iam-header-stripe-green {
+    background: var(--iam-success)
+}
+
+.iam-header-stripe-blue {
+    background: var(--iam-accent);
 }
 
 .iam-close {
     position: relative;
-    z-index: 3;
-    width: 36px;
-    height: 36px;
     margin-left: auto;
+    z-index: 3;
+    width: 32px;
+    height: 32px;
     padding: 0;
-    border: 1px solid #d8e0eb;
+    border: 1px solid var(--iam-line);
     border-radius: 50%;
     background: #fff;
-    color: #667483;
-    box-shadow: 0 2px 5px rgba(41, 55, 75, 0.12);
+    color: #6b7684;
     cursor: pointer;
-    font: 300 26px/1 Arial, sans-serif;
+    box-shadow: 0 1px 3px rgba(30, 39, 51, .1);
+    font-size: 24px;
+    font-weight: 100;
+    font-family: Arial, sans-serif;
+    line-height: 1;
+    transition: all 0.1s linear;
+}
+
+.iam-close svg {
+    width: 16px;
+    height: 16px;
+}
+
+.iam-close:hover {
+    background: var(--iam-bg);
+    color: var(--iam-ink)
 }
 
 .iam-stage {
     position: relative;
     z-index: 1;
+    flex: 1;
     display: grid;
     grid-template-rows: minmax(0, 1fr) 40px;
     min-height: 0;

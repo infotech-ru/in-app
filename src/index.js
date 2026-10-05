@@ -202,6 +202,7 @@ export class InAppModal {
         const label = this.labels;
         let body;
         let header = "";
+        let top = '<div class="iam-top"></div>'
 
         this.cancelScreenAnimation();
         this.cancelDialogResize();
@@ -225,7 +226,16 @@ export class InAppModal {
 
             header = `<header class="iam-header">
                 <h2 id="in-app-title">${escapeHtml(this.modal.name)}</h2>
-                ${this.mode === "modal" ? `<button type="button" class="iam-close" data-action="close" aria-label="${escapeHtml(label.close)}">×</button>` : ""}
+                <div class="iam-header-stripes">
+                   <i class="iam-header-stripe-green"></i>
+                   <i class="iam-header-stripe-green"></i>
+                   <i class="iam-header-stripe-blue"></i>
+                   <i class="iam-header-stripe-blue"></i>
+                </div>
+                ${this.mode === "modal" ? 
+                    `<button type="button" class="iam-close" data-action="close" aria-label="${escapeHtml(label.close)}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+                    </button>` : ""}
             </header>`;
             body = `<div class="iam-stage">
                     <div class="iam-viewport" data-viewport>
@@ -262,6 +272,7 @@ export class InAppModal {
         this.shadow.innerHTML = `<style>${contentStyles}\n${STYLES}</style>
             <div class="iam-backdrop${isModal ? "" : " iam-inline"}"${isModal ? ' data-action="backdrop"' : ""}>
                 <section class="iam-dialog" role="${isModal ? "dialog" : "region"}"${isModal ? ' aria-modal="true"' : ""} aria-label="${escapeHtml((this.modal && this.modal.name) || label.request)}">
+                    ${top}
                     ${header}
                     ${body}
                 </section>
