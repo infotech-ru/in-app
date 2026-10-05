@@ -16,9 +16,9 @@ const DEFAULT_LABELS = {
     contactRequired: "Укажите телефон или e-mail.",
     namePlaceholder: "Как к вам обращаться",
     consent: "Нажимая кнопку, вы соглашаетесь на обработку данных для связи.",
-    more: "Подробнее о возможностях ↗",
-    successTitle: "Заявка отправлена",
-    successText: "Мы свяжемся с вами в ближайшее время.",
+    more: "Подробнее о возможностях",
+    successTitle: "Запрос отправлен",
+    successText: "Специалист INFOTECH свяжется с вами по подключению.",
     error: "Не удалось выполнить запрос. Попробуйте ещё раз.",
 };
 
@@ -202,6 +202,8 @@ export class InAppModal {
         const label = this.labels;
         let body;
         let header = "";
+        let top = '<div class="iam-top"></div>'
+        let footer = "";
 
         this.cancelScreenAnimation();
         this.cancelDialogResize();
@@ -210,13 +212,16 @@ export class InAppModal {
             body = '<div class="iam-loading" aria-live="polite">Загрузка…</div>';
         } else if (this.view === "error") {
             body = `<div class="iam-error" role="alert">${escapeHtml(this.error || label.error)}</div>`;
-        } else if (this.view === "success") {
-            body = `<div class="iam-success"><h3>${escapeHtml(label.successTitle)}</h3><p>${escapeHtml(label.successText)}</p><button type="button" class="iam-primary" data-action="close">${escapeHtml(label.close)}</button></div>`;
         } else {
             const screen = this.modal.screens[this.screen];
             const descriptionUrl = safeExternalUrl(this.modal.descriptionUrl);
             const more = descriptionUrl
-                ? `<div class="iam-more-wrap"><a class="iam-more" href="${escapeHtml(descriptionUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label.more)}</a></div>`
+                ? `<div class="iam-more-wrap">
+                        <a class="iam-more" href="${escapeHtml(descriptionUrl)}" target="_blank" rel="noopener noreferrer">
+                            <span class="iam-more-text">${escapeHtml(label.more)}</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"></path></svg>
+                        </a>
+                    </div>`
                 : "";
             const dots = this.modal.screens.map((item, index) => `<button type="button" class="iam-dot${index === this.screen ? " is-active" : ""}" data-screen="${index}" data-dot aria-label="Экран ${index + 1}"${index === this.screen ? ' aria-current="true"' : ""}></button>`).join("");
             const email = this.user.email || "";
@@ -225,36 +230,69 @@ export class InAppModal {
 
             header = `<header class="iam-header">
                 <h2 id="in-app-title">${escapeHtml(this.modal.name)}</h2>
-                ${this.mode === "modal" ? `<button type="button" class="iam-close" data-action="close" aria-label="${escapeHtml(label.close)}">×</button>` : ""}
+                <div class="iam-header-stripes">
+                   <i class="iam-header-stripe-green"></i>
+                   <i class="iam-header-stripe-green"></i>
+                   <i class="iam-header-stripe-blue"></i>
+                   <i class="iam-header-stripe-blue"></i>
+                </div>
+                ${this.mode === "modal" ? 
+                    `<button type="button" class="iam-close" data-action="close" aria-label="${escapeHtml(label.close)}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+                    </button>` : ""}
             </header>`;
-            body = `<div class="iam-stage">
-                    <div class="iam-viewport" data-viewport>
-                        <div class="iam-content" data-screen-panel>${screen.html}</div>
+            body = `
+                <div class="iam-stage">
+                    <div class="iam-stage-content">
+                        <div class="iam-viewport" data-viewport>
+                            <div class="iam-content" data-screen-panel>${screen.html}</div>
+                        </div>
                     </div>
                     <div class="iam-navigation">
                         <div class="iam-dots">${dots}</div>
                         <div class="iam-arrows">
-                            <button type="button" class="iam-arrow" data-action="back" aria-label="${escapeHtml(label.back)}"${this.screen === 0 ? " disabled" : ""}>‹</button>
-                            <button type="button" class="iam-arrow" data-action="next" aria-label="${escapeHtml(label.next)}"${this.screen === this.modal.screens.length - 1 ? " disabled" : ""}>›</button>
+                            <button type="button" class="iam-arrow" data-action="back" aria-label="${escapeHtml(label.back)}"${this.screen === 0 ? " disabled" : ""}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>
+                            </button>
+                            <button type="button" class="iam-arrow" data-action="next" aria-label="${escapeHtml(label.next)}"${this.screen === this.modal.screens.length - 1 ? " disabled" : ""}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div class="iam-open-form" data-open>
-                        <button type="button" class="iam-primary" data-action="openForm">${escapeHtml(label.openForm)}</button>
+               
+            `;
+            footer = `
+                <div class="iam-footer">
+                    <div class="iam-open-form" data-open>
+                        <button type="button" class="iam-primary" data-action="openForm">
+                            ${escapeHtml(label.openForm)}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+                        </button>
+                    </div>
+                    <${leadTag} class="iam-lead" style="display:none;" data-lead-form>
+                         <div class="iam-form-fields">
+                             <label class="name">${escapeHtml(label.name)}<input name="name" autocomplete="name" required placeholder="${escapeHtml(label.namePlaceholder)}" value="${escapeHtml(this.user.name)}"></label>
+                             <label class="email">${escapeHtml(label.email)}<input name="email" type="email" autocomplete="email" placeholder="${escapeHtml(label.emailPlaceholder)}" value="${escapeHtml(email)}"></label>
+                             <label class="phone">${escapeHtml(label.phone)}<input name="phone" type="tel" autocomplete="tel" placeholder="${escapeHtml(label.phonePlaceholder)}" value="${escapeHtml(phone)}"></label>
+                         </div>
+                         <div class="iam-submit-row">
+                             <button type="button" class="iam-primary" data-action="submit">${escapeHtml(label.submit)}</button>
+                             <span class="iam-consent">${escapeHtml(label.consent)}</span>
+                         </div>
+                    </${leadTag}>
+                    <div class="iam-form-success" style="display: none;" data-success-fallback>
+                        <div class="ok-badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                        </div>
+                        <div class="iam-form-success-details">
+                            <b>${escapeHtml(label.successTitle)}</b>
+                            <span>${escapeHtml(label.successText)}</span>
+                        </div>
+                    </div>
+                    ${more}
                 </div>
-                <${leadTag} class="iam-lead" style="display:none;" data-lead-form>
-                    <div class="iam-form-fields">
-                        <label class="name">${escapeHtml(label.name)}<input name="name" autocomplete="name" required placeholder="${escapeHtml(label.namePlaceholder)}" value="${escapeHtml(this.user.name)}"></label>
-                        <label class="email">${escapeHtml(label.email)}<input name="email" type="email" autocomplete="email" placeholder="${escapeHtml(label.emailPlaceholder)}" value="${escapeHtml(email)}"></label>
-                        <label class="phone">${escapeHtml(label.phone)}<input name="phone" type="tel" autocomplete="tel" placeholder="${escapeHtml(label.phonePlaceholder)}" value="${escapeHtml(phone)}"></label>
-                    </div>
-                    <div class="iam-submit-row">
-                        <button type="button" class="iam-primary" data-action="submit">${escapeHtml(label.submit)}</button>
-                        <span class="iam-consent">${escapeHtml(label.consent)}</span>
-                    </div>
-                </${leadTag}>
-                ${more}
-`;
+            `
         }
 
         const isModal = this.mode === "modal";
@@ -262,8 +300,10 @@ export class InAppModal {
         this.shadow.innerHTML = `<style>${contentStyles}\n${STYLES}</style>
             <div class="iam-backdrop${isModal ? "" : " iam-inline"}"${isModal ? ' data-action="backdrop"' : ""}>
                 <section class="iam-dialog" role="${isModal ? "dialog" : "region"}"${isModal ? ' aria-modal="true"' : ""} aria-label="${escapeHtml((this.modal && this.modal.name) || label.request)}">
+                    ${top}
                     ${header}
                     ${body}
+                    ${footer}
                 </section>
             </div>`;
 
@@ -483,6 +523,8 @@ export class InAppModal {
     async submit() {
         this.recordEvent("submit_click");
         const form = this.shadow.querySelector("[data-lead-form]");
+        const formOpener = this.shadow.querySelector("[data-open]")
+        const successFallback = this.shadow.querySelector("[data-success-fallback]");
         this.updateContactValidity(form);
         if (!form.reportValidity()){
             return;
@@ -515,8 +557,11 @@ export class InAppModal {
                 lead,
                 idempotencyKey: this.submissionKey || (this.submissionKey = idempotencyKey()),
             });
-            this.view = "success";
-            this.render();
+            form.style.display = 'none';
+            formOpener.style.display = 'none';
+            const successFallback = this.shadow.querySelector("[data-success-fallback]");
+            successFallback.style.display = 'flex';
+            this.resetDialogHeight();
             this.emit("submitted", {code: this.code});
         } catch (error) {
             button.disabled = false;
